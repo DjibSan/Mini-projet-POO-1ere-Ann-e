@@ -12,22 +12,34 @@ public class ServiceAlerte {
 
     private static final String FICHIER_ALERTES = "alertes.log";
 
-    public void traiterMesure(CapteurConnecte capteur, double valeur) {
+    /**
+     * Traite une mesure : construit le message, l'affiche dans la console,
+     * log les alertes dans un fichier, et renvoie le message pour une éventuelle interface graphique.
+     */
+    public String traiterMesure(CapteurConnecte capteur, double valeur) {
+        String message;
+
         if (capteur.estEnAlerte(valeur)) {
-            String message = "!!! ALERTE !!! "
+            message = "!!! ALERTE !!! "
                     + capteur.getNom()
                     + " (" + capteur.getId() + ") : "
                     + valeur + " " + capteur.getUnite()
                     + " hors des seuils ["
                     + capteur.getSeuilMin() + " ; "
                     + capteur.getSeuilMax() + "]";
-
             System.out.println(message);
             logAlerte(message);
         } else {
-            System.out.println("OK - " + capteur.getNom()
-                    + " : " + valeur + " " + capteur.getUnite());
+            message = "OK - " + capteur.getNom()
+                    + " (" + capteur.getId() + ") : "
+                    + valeur + " " + capteur.getUnite()
+                    + " dans les seuils ["
+                    + capteur.getSeuilMin() + " ; "
+                    + capteur.getSeuilMax() + "]";
+            System.out.println(message);
         }
+
+        return message;
     }
 
     private void logAlerte(String message) {
